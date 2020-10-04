@@ -208,12 +208,14 @@ export default {
 		},
 		// process all messages of a folder
 		processMessages: async function (folder, identities) {
-			let self = this
-			let page = await browser.messages.list(folder)
-			page.messages.map(m => self.analyzeMessage(m, identities))
-			while (page.id) {
-				page = await browser.messages.continueList(page.id)
+			if (folder) {
+				let self = this
+				let page = await browser.messages.list(folder)
 				page.messages.map(m => self.analyzeMessage(m, identities))
+				while (page.id) {
+					page = await browser.messages.continueList(page.id)
+					page.messages.map(m => self.analyzeMessage(m, identities))
+				}
 			}
 		},
 		// extract information of a single message
